@@ -1,4 +1,4 @@
-# EduPortal — Student Record Management
+# 🙋‍♂️ EduPortal — Student Record Management
 
 Simple single-page app to add/edit/delete student records, compute average & grade, and persist data with localStorage.
 
