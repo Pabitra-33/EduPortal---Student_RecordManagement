@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EduPortal — Student Records Management</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="header">
+    <h1>EduPortal — Student Records Management</h1>
+  </header>
+
+  <main class="container">
+    <section class="controls">
+      <button id="btnAdd" class="btn primary">+ Add Student</button>
+
+      <div class="search-wrap">
+        <input id="searchInput" type="search" placeholder="Search by name / course..." />
+        <select id="sortSelect" title="Sort">
+          <option value="">Sort by</option>
+          <option value="name_asc">Name ↑</option>
+          <option value="name_desc">Name ↓</option>
+          <option value="avg_desc">Avg Marks ↓</option>
+          <option value="avg_asc">Avg Marks ↑</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Form Panel -->
+    <section id="formPanel" class="panel hidden">
+      <h2 id="formTitle">Add Student</h2>
+      <form id="studentForm" novalidate>
+        <input type="hidden" id="studentId" />
+        <div class="row">
+          <label>Name <input id="name" type="text" required /></label>
+          <label>Email <input id="email" type="email" required /></label>
+        </div>
+
+        <div class="row">
+          <label>Course <input id="course" type="text" required /></label>
+          <label>DOB <input id="dob" type="date" required /></label>
+        </div>
+
+        <div class="row">
+          <label>Marks - Math <input id="m1" type="number" min="0" max="100" required /></label>
+          <label>Marks - Science <input id="m2" type="number" min="0" max="100" required /></label>
+          <label>Marks - English <input id="m3" type="number" min="0" max="100" required /></label>
+        </div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn primary">Save</button>
+          <button id="btnCancel" type="button" class="btn">Cancel</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Table -->
+    <section class="panel">
+      <h2>Students</h2>
+      <div class="table-wrap">
+        <table id="studentsTable" class="students-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th data-sort="name">Name</th>
+              <th>Email</th>
+              <th>Course</th>
+              <th>Avg</th>
+              <th>Grade</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="studentsTbody">
+            <!-- rows inserted by JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <small>EduPortal • LocalStorage demo • Built with HTML/CSS/JS</small>
+  </footer>
+
+  <script src="logic.js"></script>
+</body>
+</html>
