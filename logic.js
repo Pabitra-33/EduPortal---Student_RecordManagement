@@ -1,5 +1,5 @@
 (() => {
-  const STORAGE_KEY = 'eduportal_students_v1';
+  const STORAGE_KEY = 'eduportal_students_v1'; // localStorage key
 
   // DOM reference
   const btnAdd = document.getElementById('btnAdd');
@@ -157,11 +157,26 @@
     const m2 = Number(fldM2.value);
     const m3 = Number(fldM3.value);
 
-    if (!name) return { ok:false, msg:'Name is required' };
-    if (!email || !/^\S+@\S+\.\S+$/.test(email)) return { ok:false, msg:'Valid email is required' };
-    if (!course) return { ok:false, msg:'Course is required' };
-    if (![m1,m2,m3].every(n => Number.isFinite(n))) return { ok:false, msg:'All marks must be numbers' };
-    if (![m1,m2,m3].every(n => n >= 0 && n <= 100)) return { ok:false, msg:'Marks must be between 0 and 100' };
+    if (!name) 
+      return { 
+    ok:false, msg:'Name is required' 
+      };
+    if (!email || !/^\S+@\S+\.\S+$/.test(email)) 
+      return { 
+    ok:false, msg:'Valid email is required' 
+      };
+    if (!course) 
+      return { 
+    ok:false, msg:'Course is required' 
+      };
+    if (![m1,m2,m3].every(n => Number.isFinite(n))) 
+      return { 
+    ok:false, msg:'All marks must be numbers' 
+      };
+    if (![m1,m2,m3].every(n => n >= 0 && n <= 100)) 
+      return { 
+    ok:false, msg:'Marks must be between 0 and 100' 
+      };
 
     return { 
       ok:true 
