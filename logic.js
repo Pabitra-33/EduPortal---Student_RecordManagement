@@ -1,8 +1,7 @@
-// script.js - EduPortal
 (() => {
   const STORAGE_KEY = 'eduportal_students_v1';
 
-  // DOM refs
+  // DOM reference
   const btnAdd = document.getElementById('btnAdd');
   const formPanel = document.getElementById('formPanel');
   const studentForm = document.getElementById('studentForm');
@@ -11,7 +10,7 @@
   const searchInput = document.getElementById('searchInput');
   const sortSelect = document.getElementById('sortSelect');
 
-  // form fields
+  // form fields reference
   const fldId = document.getElementById('studentId');
   const fldName = document.getElementById('name');
   const fldEmail = document.getElementById('email');
@@ -22,29 +21,31 @@
   const fldM3 = document.getElementById('m3');
 
   let students = []; // array of student objects
-  let editMode = false;
+  let editMode = false; // form mode
 
-  // --- Storage helpers
+  // --- Storage helpers ---
   function loadStudents() {
     try {
-      const raw = localStorage.getItem(STORAGE_KEY);
-      students = raw ? JSON.parse(raw) : [];
+      const raw = localStorage.getItem(STORAGE_KEY); // may throw if storage full
+      students = raw ? JSON.parse(raw) : []; // may throw if corrupted
     } catch (e) {
-      console.error('Error reading from storage', e);
+      console.error('Error reading from storage', e); // reset
       students = [];
     }
   }
 
+  // Save to localStorage as JSON string
   function saveStudents() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(students));
   }
 
-  // --- Utility functions
+  // --- Utility functions ---
   function uid() {
-    // small unique id using timestamp + random
+    // small unique id using timestamp + random part
     return 's_' + Date.now().toString(36) + Math.random().toString(36).slice(2,8);
   }
 
+  // Calculate total, average, grade
   function calcStats(s) {
     const m1 = Number(s.m1), m2 = Number(s.m2), m3 = Number(s.m3);
     const total = m1 + m2 + m3;
@@ -54,10 +55,12 @@
     else if (avg >= 70) grade = 'B';
     else if (avg >= 50) grade = 'C';
     else grade = 'D';
-    return { total, avg, grade };
+    return { 
+      total, avg, grade 
+    };
   }
 
-  // --- Render functions
+  // --- Render functions ---
   function renderStudents(filter = '') {
     const q = filter.trim().toLowerCase();
     // optional sorting based on select
@@ -68,6 +71,7 @@
       list = list.filter(s => s.name.toLowerCase().includes(q) || (s.course && s.course.toLowerCase().includes(q)));
     }
 
+    // sorting logic
     if (sortVal) {
       if (sortVal === 'name_asc') list.sort((a,b) => a.name.localeCompare(b.name));
       if (sortVal === 'name_desc') list.sort((a,b) => b.name.localeCompare(a.name));
@@ -75,13 +79,14 @@
       if (sortVal === 'avg_asc') list.sort((a,b) => calcStats(a).avg - calcStats(b).avg);
     }
 
-    // build rows
-    studentsTbody.innerHTML = '';
+    // build rows 
+    studentsTbody.innerHTML = '';// clear first
     if (list.length === 0) {
       studentsTbody.innerHTML = `<tr><td colspan="7" style="text-align:center;color:var(--muted)">No students yet.</td></tr>`;
       return;
     }
 
+    // create rows
     for (let i = 0; i < list.length; i++) {
       const s = list[i];
       const { avg, grade } = calcStats(s);
@@ -97,13 +102,12 @@
           <button class="edit" data-id="${s.id}">Edit</button>
           <button class="delete" data-id="${s.id}">Delete</button>
           <button class="view" data-id="${s.id}">View</button>
-        </td>
-      `;
+        </td> `;
       studentsTbody.appendChild(tr);
     }
   }
 
-  // safe text
+  // safe text for HTML
   function escapeHtml(text = '') {
     return String(text).replace(/[&<>"'`=\/]/g, function(s) {
       return ({
@@ -112,7 +116,7 @@
     });
   }
 
-  // --- Form control
+  // --- Form control ---
   function showForm(mode='add', id=null) {
     formPanel.classList.remove('hidden');
     if (mode === 'add') {
@@ -138,12 +142,13 @@
     fldName.focus();
   }
 
+  // Hide form panel
   function hideForm() {
     formPanel.classList.add('hidden');
     studentForm.reset();
   }
 
-  // --- Validation
+  // --- Validation ---
   function validateForm() {
     const name = fldName.value.trim();
     const email = fldEmail.value.trim();
@@ -158,10 +163,12 @@
     if (![m1,m2,m3].every(n => Number.isFinite(n))) return { ok:false, msg:'All marks must be numbers' };
     if (![m1,m2,m3].every(n => n >= 0 && n <= 100)) return { ok:false, msg:'Marks must be between 0 and 100' };
 
-    return { ok:true };
+    return { 
+      ok:true 
+    };
   }
 
-  // --- CRUD operations
+  // --- CRUD operations ---
   function addStudentFromForm() {
     const validation = validateForm();
     if (!validation.ok) { alert(validation.msg); return false; }
@@ -184,6 +191,7 @@
     return true;
   }
 
+  // Update existing student from form
   function updateStudentFromForm() {
     const validation = validateForm();
     if (!validation.ok) { alert(validation.msg); return false; }
@@ -207,6 +215,7 @@
     return true;
   }
 
+  // Delete student by id
   function deleteStudentById(id) {
     if (!confirm('Delete this student?')) return;
     students = students.filter(s => s.id !== id);
@@ -214,6 +223,7 @@
     renderStudents(searchInput.value);
   }
 
+  // View student details
   function viewStudent(id) {
     const s = students.find(x => x.id === id);
     if (!s) return alert('Not found');
@@ -265,7 +275,7 @@
     renderStudents();
   }
 
-  // run
+  // run initialization
   init();
 
 })();
